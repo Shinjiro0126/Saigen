@@ -49,6 +49,8 @@ pub async fn start_run(
     .await
     .map_err(|e| e.to_string())?;
 
+    // 初回のみrdevリスナーを起動（アクセシビリティ権限が必要）
+    capture.inner().ensure_listener();
     capture.start();
 
     sqlx::query_as::<_, TestRun>("SELECT * FROM test_runs WHERE id = ?")

@@ -38,9 +38,8 @@ pub fn run() {
                 .expect("failed to initialize database");
             handle.manage(pool);
 
-            // グローバル録音状態を初期化してrdevリスナー起動
+            // 録音状態を初期化（リスナーは録音開始時に遅延起動）
             let capture = Arc::new(capture::CaptureState::new());
-            capture::spawn_listener(capture.clone());
             handle.manage(capture);
 
             Ok(())
