@@ -5,6 +5,7 @@ import { Projects } from "./pages/Projects";
 import { Suites } from "./pages/Suites";
 import { Cases } from "./pages/Cases";
 import { Recorder } from "./pages/Recorder";
+import { RunDetail } from "./pages/RunDetail";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="projects/:projectId/suites" element={<Suites />} />
           <Route path="projects/:projectId/suites/:suiteId/cases" element={<Cases />} />
           <Route path="cases/:caseId/record" element={<Recorder />} />
+          <Route path="runs/:runId" element={<RunDetail />} />
         </Route>
       </Routes>
     </BrowserRouter>

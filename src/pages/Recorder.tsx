@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, CheckCircle, ExternalLink, XCircle } from "lucide-react";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 import { useTestCaseStore } from "../store/testCaseStore";
 import { useRecorder } from "../hooks/useRecorder";
 import { RecordingBar } from "../components/recorder/RecordingBar";
@@ -32,8 +32,9 @@ export function Recorder() {
   const [endDialogOpen, setEndDialogOpen] = useState(false);
 
   const handleEnd = async (status: string, notes: string) => {
-    await end(status, notes);
+    const updated = await end(status, notes);
     setEndDialogOpen(false);
+    if (updated) navigate(`/runs/${updated.id}`);
   };
 
   const handleAbort = async () => {
@@ -55,7 +56,6 @@ export function Recorder() {
     );
   }
 
-  const isEnded = run && run.status !== "running";
 
   return (
     <div className="p-6">
@@ -120,35 +120,7 @@ export function Recorder() {
         />
       )}
 
-      {/* 終了後: サマリー */}
-      {isEnded && (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 text-center">
-          {run.status === "passed" ? (
-            <CheckCircle size={40} className="text-green-400 mx-auto mb-3" />
-          ) : (
-            <XCircle size={40} className="text-red-400 mx-auto mb-3" />
-          )}
-          <h2 className="text-lg font-bold text-white mb-1">
-            {run.status === "passed" ? "テスト合格" : "テスト不合格"}
-          </h2>
-          <p className="text-sm text-gray-500 mb-1">
-            ステップ数: {steps.length} 件
-          </p>
-          {run.notes && (
-            <p className="text-sm text-gray-400 mt-3 bg-gray-800 rounded-lg px-4 py-2 text-left">
-              {run.notes}
-            </p>
-          )}
-          <div className="flex justify-center gap-3 mt-6">
-            <Button variant="ghost" onClick={() => navigate(-1)}>
-              <ArrowLeft size={16} />
-              ケース一覧に戻る
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* 録音終了ダイアログ */}
+{/* 録音終了ダイアログ */}
       <EndRunDialog
         open={endDialogOpen}
         isLoading={isLoading}
