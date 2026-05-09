@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import type { Project, TestCase, TestSuite } from "../types";
+import type { OperationEvent, Project, TestCase, TestRun, TestStep, TestSuite } from "../types";
 
 const isTauri = () =>
   typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
@@ -56,6 +56,32 @@ export const caseCommands = {
     invoke<TestCase>("update_case", { id, name, description, priority, url }),
 
   delete: (id: string) => invoke<void>("delete_case", { id }),
+};
+
+export const runCommands = {
+  start: (case_id: string) => invoke<TestRun>("start_run", { case_id }),
+  end: (run_id: string, status: string, notes: string) =>
+    invoke<TestRun>("end_run", { run_id, status, notes }),
+  abort: (run_id: string) => invoke<void>("abort_run", { run_id }),
+  list: (case_id: string) => call<TestRun[]>("list_runs", { case_id }),
+  get: (run_id: string) => invoke<TestRun>("get_run", { run_id }),
+  delete: (run_id: string) => invoke<void>("delete_run", { run_id }),
+};
+
+export const stepCommands = {
+  add: (run_id: string, description: string, status: string) =>
+    invoke<TestStep>("add_step", { run_id, description, status }),
+  list: (run_id: string) => call<TestStep[]>("list_steps", { run_id }),
+  update: (id: string, description: string, status: string, screenshot?: string | null) =>
+    invoke<TestStep>("update_step", { id, description, status, screenshot }),
+};
+
+export const captureCommands = {
+  takeScreenshot: (run_id: string, step_number: number) =>
+    invoke<string>("take_screenshot", { run_id, step_number }),
+  getOperations: (run_id: string) =>
+    call<OperationEvent[]>("get_operations", { run_id }),
+  openFolder: (run_id: string) => invoke<void>("open_folder", { run_id }),
 };
 
 export const openUrl = (url: string) =>

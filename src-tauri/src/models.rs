@@ -43,6 +43,19 @@ pub struct TestRun {
     pub screenshots_dir: Option<String>,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct OperationEvent {
+    pub timestamp: String,
+    #[serde(rename = "type")]
+    pub event_type: String,
+    pub x: Option<f64>,
+    pub y: Option<f64>,
+    pub button: Option<String>,
+    pub key: Option<String>,
+    pub value: Option<String>,
+    pub screenshot_ref: Option<String>,
+}
+
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow, Clone)]
 pub struct TestStep {
     pub id: String,

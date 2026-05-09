@@ -46,3 +46,14 @@ export interface TestStep {
   screenshot: string | null;
   created_at: string;
 }
+
+export interface OperationEvent {
+  timestamp: string;
+  type: "click" | "keypress" | "scroll";
+  x: number | null;
+  y: number | null;
+  button: string | null;
+  key: string | null;
+  value: string | null;
+  screenshot_ref: string | null;
+}
