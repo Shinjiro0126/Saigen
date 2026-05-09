@@ -1,11 +1,20 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { AppShell } from "./components/layout/AppShell";
+import { Dashboard } from "./pages/Dashboard";
+import { Suites } from "./pages/Suites";
+import { Cases } from "./pages/Cases";
+
 function App() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-950 text-white">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-indigo-400 mb-2">Saigen</h1>
-        <p className="text-gray-400">システムテスト記録・管理ツール</p>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<AppShell />}>
+          <Route index element={<Dashboard />} />
+          <Route path="suites" element={<Suites />} />
+          <Route path="suites/:suiteId/cases" element={<Cases />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
