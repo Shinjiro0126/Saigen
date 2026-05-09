@@ -4,6 +4,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { Projects } from "./pages/Projects";
 import { Suites } from "./pages/Suites";
 import { Cases } from "./pages/Cases";
+import { Recorder } from "./pages/Recorder";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="projects" element={<Projects />} />
           <Route path="projects/:projectId/suites" element={<Suites />} />
           <Route path="projects/:projectId/suites/:suiteId/cases" element={<Cases />} />
+          <Route path="cases/:caseId/record" element={<Recorder />} />
         </Route>
       </Routes>
     </BrowserRouter>
