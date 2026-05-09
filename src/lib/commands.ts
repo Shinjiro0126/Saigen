@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import type { OperationEvent, Project, TestCase, TestRun, TestStep, TestSuite } from "../types";
+import type { AppStats, OperationEvent, Project, TestCase, TestRun, TestStep, TestSuite } from "../types";
 
 const isTauri = () =>
   typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
@@ -82,6 +82,15 @@ export const captureCommands = {
   getOperations: (run_id: string) =>
     call<OperationEvent[]>("get_operations", { run_id }),
   openFolder: (run_id: string) => invoke<void>("open_folder", { run_id }),
+};
+
+const emptyStats: AppStats = {
+  project_count: 0, suite_count: 0, case_count: 0,
+  run_count: 0, passed_count: 0, failed_count: 0, recent_runs: [],
+};
+
+export const statsCommands = {
+  get: () => isTauri() ? invoke<AppStats>("get_stats") : Promise.resolve(emptyStats),
 };
 
 export const openUrl = (url: string) =>

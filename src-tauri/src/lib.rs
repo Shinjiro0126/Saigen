@@ -13,6 +13,7 @@ use commands::{
         abort_run, add_step, delete_run, end_run, get_run, list_runs, list_steps, start_run,
         update_step,
     },
+    stats_commands::get_stats,
     suite_commands::{create_suite, delete_suite, list_suites, update_suite},
 };
 use tauri::Manager;
@@ -75,6 +76,8 @@ pub fn run() {
             take_screenshot,
             get_operations,
             open_folder,
+            // 統計
+            get_stats,
             // URL
             open_url,
         ])

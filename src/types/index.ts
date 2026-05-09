@@ -47,6 +47,25 @@ export interface TestStep {
   created_at: string;
 }
 
+export interface RecentRunItem {
+  run_id: string;
+  case_id: string;
+  case_name: string;
+  status: "passed" | "failed" | "aborted";
+  started_at: string;
+  ended_at: string | null;
+}
+
+export interface AppStats {
+  project_count: number;
+  suite_count: number;
+  case_count: number;
+  run_count: number;
+  passed_count: number;
+  failed_count: number;
+  recent_runs: RecentRunItem[];
+}
+
 export interface OperationEvent {
   timestamp: string;
   type: "click" | "keypress" | "scroll";
