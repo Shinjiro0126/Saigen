@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, FolderOpen } from "lucide-react";
+import { LayoutDashboard, Layers } from "lucide-react";
 
 export function Sidebar() {
   const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -20,9 +20,9 @@ export function Sidebar() {
           <LayoutDashboard size={17} />
           ダッシュボード
         </NavLink>
-        <NavLink to="/suites" className={linkClass}>
-          <FolderOpen size={17} />
-          テストスイート
+        <NavLink to="/projects" className={linkClass}>
+          <Layers size={17} />
+          プロジェクト
         </NavLink>
       </nav>
     </aside>

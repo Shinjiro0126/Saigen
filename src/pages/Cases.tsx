@@ -10,7 +10,7 @@ import { EmptyState } from "../components/ui/EmptyState";
 import type { TestCase } from "../types";
 
 export function Cases() {
-  const { suiteId } = useParams<{ suiteId: string }>();
+  const { projectId, suiteId } = useParams<{ projectId: string; suiteId: string }>();
   const navigate = useNavigate();
   const { suites, fetchSuites } = useSuiteStore();
   const { cases, isLoading, fetchCases, createCase, updateCase, deleteCase } =
@@ -21,8 +21,8 @@ export function Cases() {
   const suite = suites.find((s) => s.id === suiteId);
 
   useEffect(() => {
-    if (suites.length === 0) fetchSuites();
-  }, [suites.length, fetchSuites]);
+    if (projectId && suites.length === 0) fetchSuites(projectId);
+  }, [projectId, suites.length, fetchSuites]);
 
   useEffect(() => {
     if (suiteId) fetchCases(suiteId);
@@ -38,11 +38,11 @@ export function Cases() {
     setEditing(null);
   };
 
-  const handleSubmit = async (name: string, description: string, priority: string) => {
+  const handleSubmit = async (name: string, description: string, priority: string, url: string) => {
     if (editing) {
-      await updateCase(editing.id, name, description, priority);
+      await updateCase(editing.id, name, description, priority, url);
     } else if (suiteId) {
-      await createCase(suiteId, name, description, priority);
+      await createCase(suiteId, name, description, priority, url);
     }
   };
 
@@ -50,7 +50,7 @@ export function Cases() {
     <div className="p-6">
       <div className="flex items-center gap-3 mb-6">
         <button
-          onClick={() => navigate("/suites")}
+          onClick={() => navigate(`/projects/${projectId}/suites`)}
           className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
         >
           <ArrowLeft size={18} />

@@ -1,22 +1,20 @@
-use crate::{db::DbPool, models::TestSuite};
+use crate::{db::DbPool, models::Project};
 use chrono::Utc;
 use uuid::Uuid;
 
 #[tauri::command]
-pub async fn create_suite(
+pub async fn create_project(
     pool: tauri::State<'_, DbPool>,
-    project_id: String,
     name: String,
     description: String,
-) -> Result<TestSuite, String> {
+) -> Result<Project, String> {
     let id = Uuid::new_v4().to_string();
     let now = Utc::now().to_rfc3339();
 
     sqlx::query(
-        "INSERT INTO test_suites (id, project_id, name, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+        "INSERT INTO projects (id, name, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
     )
     .bind(&id)
-    .bind(&project_id)
     .bind(&name)
     .bind(&description)
     .bind(&now)
@@ -25,9 +23,8 @@ pub async fn create_suite(
     .await
     .map_err(|e| e.to_string())?;
 
-    Ok(TestSuite {
+    Ok(Project {
         id,
-        project_id,
         name,
         description,
         created_at: now.clone(),
@@ -36,30 +33,26 @@ pub async fn create_suite(
 }
 
 #[tauri::command]
-pub async fn list_suites(
-    pool: tauri::State<'_, DbPool>,
-    project_id: String,
-) -> Result<Vec<TestSuite>, String> {
-    sqlx::query_as::<_, TestSuite>(
-        "SELECT id, project_id, name, description, created_at, updated_at FROM test_suites WHERE project_id = ? ORDER BY created_at DESC",
+pub async fn list_projects(pool: tauri::State<'_, DbPool>) -> Result<Vec<Project>, String> {
+    sqlx::query_as::<_, Project>(
+        "SELECT id, name, description, created_at, updated_at FROM projects ORDER BY created_at DESC",
     )
-    .bind(&project_id)
     .fetch_all(pool.inner())
     .await
     .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn update_suite(
+pub async fn update_project(
     pool: tauri::State<'_, DbPool>,
     id: String,
     name: String,
     description: String,
-) -> Result<TestSuite, String> {
+) -> Result<Project, String> {
     let now = Utc::now().to_rfc3339();
 
     sqlx::query(
-        "UPDATE test_suites SET name = ?, description = ?, updated_at = ? WHERE id = ?",
+        "UPDATE projects SET name = ?, description = ?, updated_at = ? WHERE id = ?",
     )
     .bind(&name)
     .bind(&description)
@@ -69,8 +62,8 @@ pub async fn update_suite(
     .await
     .map_err(|e| e.to_string())?;
 
-    sqlx::query_as::<_, TestSuite>(
-        "SELECT id, project_id, name, description, created_at, updated_at FROM test_suites WHERE id = ?",
+    sqlx::query_as::<_, Project>(
+        "SELECT id, name, description, created_at, updated_at FROM projects WHERE id = ?",
     )
     .bind(&id)
     .fetch_one(pool.inner())
@@ -79,8 +72,8 @@ pub async fn update_suite(
 }
 
 #[tauri::command]
-pub async fn delete_suite(pool: tauri::State<'_, DbPool>, id: String) -> Result<(), String> {
-    sqlx::query("DELETE FROM test_suites WHERE id = ?")
+pub async fn delete_project(pool: tauri::State<'_, DbPool>, id: String) -> Result<(), String> {
+    sqlx::query("DELETE FROM projects WHERE id = ?")
         .bind(&id)
         .execute(pool.inner())
         .await

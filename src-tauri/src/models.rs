@@ -1,8 +1,18 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow, Clone)]
+pub struct Project {
+    pub id: String,
+    pub name: String,
+    pub description: String,
+    pub created_at: String,
+    pub updated_at: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, sqlx::FromRow, Clone)]
 pub struct TestSuite {
     pub id: String,
+    pub project_id: String,
     pub name: String,
     pub description: String,
     pub created_at: String,
@@ -16,6 +26,7 @@ pub struct TestCase {
     pub name: String,
     pub description: String,
     pub priority: String,
+    pub url: String,
     pub created_at: String,
     pub updated_at: String,
 }

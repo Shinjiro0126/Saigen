@@ -9,18 +9,20 @@ pub async fn create_case(
     name: String,
     description: String,
     priority: String,
+    url: String,
 ) -> Result<TestCase, String> {
     let id = Uuid::new_v4().to_string();
     let now = Utc::now().to_rfc3339();
 
     sqlx::query(
-        "INSERT INTO test_cases (id, suite_id, name, description, priority, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO test_cases (id, suite_id, name, description, priority, url, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
     )
     .bind(&id)
     .bind(&suite_id)
     .bind(&name)
     .bind(&description)
     .bind(&priority)
+    .bind(&url)
     .bind(&now)
     .bind(&now)
     .execute(pool.inner())
@@ -33,6 +35,7 @@ pub async fn create_case(
         name,
         description,
         priority,
+        url,
         created_at: now.clone(),
         updated_at: now,
     })
@@ -44,7 +47,7 @@ pub async fn list_cases(
     suite_id: String,
 ) -> Result<Vec<TestCase>, String> {
     sqlx::query_as::<_, TestCase>(
-        "SELECT id, suite_id, name, description, priority, created_at, updated_at FROM test_cases WHERE suite_id = ? ORDER BY created_at DESC",
+        "SELECT id, suite_id, name, description, priority, url, created_at, updated_at FROM test_cases WHERE suite_id = ? ORDER BY created_at DESC",
     )
     .bind(&suite_id)
     .fetch_all(pool.inner())
@@ -59,15 +62,17 @@ pub async fn update_case(
     name: String,
     description: String,
     priority: String,
+    url: String,
 ) -> Result<TestCase, String> {
     let now = Utc::now().to_rfc3339();
 
     sqlx::query(
-        "UPDATE test_cases SET name = ?, description = ?, priority = ?, updated_at = ? WHERE id = ?",
+        "UPDATE test_cases SET name = ?, description = ?, priority = ?, url = ?, updated_at = ? WHERE id = ?",
     )
     .bind(&name)
     .bind(&description)
     .bind(&priority)
+    .bind(&url)
     .bind(&now)
     .bind(&id)
     .execute(pool.inner())
@@ -75,7 +80,7 @@ pub async fn update_case(
     .map_err(|e| e.to_string())?;
 
     sqlx::query_as::<_, TestCase>(
-        "SELECT id, suite_id, name, description, priority, created_at, updated_at FROM test_cases WHERE id = ?",
+        "SELECT id, suite_id, name, description, priority, url, created_at, updated_at FROM test_cases WHERE id = ?",
     )
     .bind(&id)
     .fetch_one(pool.inner())

@@ -1,5 +1,14 @@
+export interface Project {
+  id: string;
+  name: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface TestSuite {
   id: string;
+  project_id: string;
   name: string;
   description: string;
   created_at: string;
@@ -12,6 +21,7 @@ export interface TestCase {
   name: string;
   description: string;
   priority: "high" | "medium" | "low";
+  url: string;
   created_at: string;
   updated_at: string;
 }

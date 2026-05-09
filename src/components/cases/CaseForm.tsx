@@ -6,7 +6,7 @@ import type { TestCase } from "../../types";
 interface CaseFormProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (name: string, description: string, priority: string) => Promise<void>;
+  onSubmit: (name: string, description: string, priority: string, url: string) => Promise<void>;
   initial?: TestCase | null;
 }
 
@@ -20,12 +20,14 @@ export function CaseForm({ open, onClose, onSubmit, initial }: CaseFormProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<"high" | "medium" | "low">("medium");
+  const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setName(initial?.name ?? "");
     setDescription(initial?.description ?? "");
     setPriority((initial?.priority as "high" | "medium" | "low") ?? "medium");
+    setUrl(initial?.url ?? "");
   }, [initial, open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,7 +35,7 @@ export function CaseForm({ open, onClose, onSubmit, initial }: CaseFormProps) {
     if (!name.trim()) return;
     setLoading(true);
     try {
-      await onSubmit(name.trim(), description.trim(), priority);
+      await onSubmit(name.trim(), description.trim(), priority, url.trim());
       onClose();
     } finally {
       setLoading(false);
@@ -90,6 +92,18 @@ export function CaseForm({ open, onClose, onSubmit, initial }: CaseFormProps) {
               </button>
             ))}
           </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1.5">
+            テスト対象URL
+          </label>
+          <input
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="例: https://example.com/login"
+            type="url"
+            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 text-sm"
+          />
         </div>
         <div className="flex justify-end gap-2 pt-1">
           <Button type="button" variant="ghost" onClick={onClose}>

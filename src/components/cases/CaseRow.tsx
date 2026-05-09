@@ -1,6 +1,7 @@
-import { Pencil, Play, Trash2 } from "lucide-react";
+import { ExternalLink, Pencil, Play, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "../ui/Badge";
+import { openUrl } from "../../lib/commands";
 import type { TestCase } from "../../types";
 
 interface CaseRowProps {
@@ -27,6 +28,15 @@ export function CaseRow({ testCase, onEdit, onDelete }: CaseRowProps) {
           <p className="text-sm text-gray-500 mt-0.5 truncate">
             {testCase.description}
           </p>
+        )}
+        {testCase.url && (
+          <button
+            onClick={() => openUrl(testCase.url)}
+            className="flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 mt-0.5 truncate max-w-full"
+          >
+            <ExternalLink size={11} className="shrink-0" />
+            <span className="truncate">{testCase.url}</span>
+          </button>
         )}
       </div>
       <div className="flex items-center gap-1 shrink-0">

@@ -6,8 +6,8 @@ interface TestCaseStore {
   cases: TestCase[];
   isLoading: boolean;
   fetchCases: (suiteId: string) => Promise<void>;
-  createCase: (suiteId: string, name: string, description: string, priority: string) => Promise<void>;
-  updateCase: (id: string, name: string, description: string, priority: string) => Promise<void>;
+  createCase: (suiteId: string, name: string, description: string, priority: string, url: string) => Promise<void>;
+  updateCase: (id: string, name: string, description: string, priority: string, url: string) => Promise<void>;
   deleteCase: (id: string) => Promise<void>;
 }
 
@@ -25,13 +25,13 @@ export const useTestCaseStore = create<TestCaseStore>((set) => ({
     }
   },
 
-  createCase: async (suiteId, name, description, priority) => {
-    const c = await caseCommands.create(suiteId, name, description, priority);
+  createCase: async (suiteId, name, description, priority, url) => {
+    const c = await caseCommands.create(suiteId, name, description, priority, url);
     set((state) => ({ cases: [c, ...state.cases] }));
   },
 
-  updateCase: async (id, name, description, priority) => {
-    const updated = await caseCommands.update(id, name, description, priority);
+  updateCase: async (id, name, description, priority, url) => {
+    const updated = await caseCommands.update(id, name, description, priority, url);
     set((state) => ({
       cases: state.cases.map((c) => (c.id === id ? updated : c)),
     }));

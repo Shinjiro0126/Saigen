@@ -5,8 +5,8 @@ import type { TestSuite } from "../types";
 interface SuiteStore {
   suites: TestSuite[];
   isLoading: boolean;
-  fetchSuites: () => Promise<void>;
-  createSuite: (name: string, description: string) => Promise<void>;
+  fetchSuites: (projectId: string) => Promise<void>;
+  createSuite: (projectId: string, name: string, description: string) => Promise<void>;
   updateSuite: (id: string, name: string, description: string) => Promise<void>;
   deleteSuite: (id: string) => Promise<void>;
 }
@@ -15,18 +15,18 @@ export const useSuiteStore = create<SuiteStore>((set) => ({
   suites: [],
   isLoading: false,
 
-  fetchSuites: async () => {
+  fetchSuites: async (projectId) => {
     set({ isLoading: true });
     try {
-      const suites = await suiteCommands.list();
+      const suites = await suiteCommands.list(projectId);
       set({ suites });
     } finally {
       set({ isLoading: false });
     }
   },
 
-  createSuite: async (name, description) => {
-    const suite = await suiteCommands.create(name, description);
+  createSuite: async (projectId, name, description) => {
+    const suite = await suiteCommands.create(projectId, name, description);
     set((state) => ({ suites: [suite, ...state.suites] }));
   },
 
